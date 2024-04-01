@@ -5,7 +5,7 @@ import H1 from '@/components/ui/H1'
 import useCartContext from '@/lib/hooks/useCartContext'
 import React from 'react'
 
-export default function page() {
+export default function Page() {
   const { cart } = useCartContext()
   return (
     <div className="flex flex-col p-4 gap-8">
