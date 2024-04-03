@@ -1,9 +1,9 @@
-export type CoffeeProduct = {
-  id: string
-  name: string
-  image: string
-  notes: string
-  price: { regular: number; large: number }
-  rating?: number
-  reviews?: number
+import { Prisma } from '@prisma/client'
+
+export type CoffeeProductsInclude = Prisma.CoffeeProductsGetPayload<{
+  include: { price: true; coffeeProfile: true }
+}>
+
+export type FilterOptions = {
+  [key: string]: { [key: string]: boolean }
 }

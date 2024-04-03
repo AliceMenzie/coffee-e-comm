@@ -10,35 +10,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model CoffeeProduct  {
-  // id    Int     @id @default(autoincrement())
-  id    String   @id @default(cuid())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  name String
-  image String
-  notes String
-  reviews Review[]
-  price Price? 
-  
-  }
-
-model Price {
-  id    Int     @id @default(autoincrement())
-  regular Int 
-  large   Int
-  coffeeProductId String @unique
-  coffeeProduct CoffeeProduct? @relation(fields: [coffeeProductId], references: [id])
+model CoffeeProducts {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  image     String
+  notes     String
+  reviews   Reviews[]
+  price     Prices?
+  coffeeProfile CoffeeProfiles?
 }
 
-model Review {
-  id    Int     @id @default(autoincrement())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  rating Int
-  comment String
+model Prices {
+  id              Int            @id @default(autoincrement())
+  regular         Int
+  large           Int
+  coffeeProductId String         @unique
+  coffeeProduct   CoffeeProducts? @relation(fields: [coffeeProductId], references: [id])
+}
+
+model Reviews {
+  id              Int           @id @default(autoincrement())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  rating          Int
+  comment         String
   coffeeProductId String
-  coffeeProduct CoffeeProduct @relation(fields: [coffeeProductId], references: [id])
+  coffeeProduct   CoffeeProducts @relation(fields: [coffeeProductId], references: [id])
 }
 
-
+model CoffeeProfiles {
+  id              Int            @id @default(autoincrement())
+  type            String
+  strength        String
+  origin          String
+  flavour         String
+  coffeeProductId String         @unique
+  coffeeProduct   CoffeeProducts? @relation(fields: [coffeeProductId], references: [id])
+}

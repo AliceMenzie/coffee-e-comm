@@ -12,12 +12,12 @@ import {
 } from '@/components/ui/card'
 import { Button } from './ui/button'
 import { ShoppingCart } from 'lucide-react'
-import { CoffeeProduct } from '@/lib/types'
+import { CoffeeProductsInclude } from '@/lib/types'
 import { SheetTrigger } from './ui/sheet'
 import useCartContext from '@/lib/hooks/useCartContext'
 
 type CoffeeProductItemProps = {
-  product: CoffeeProduct
+  product: CoffeeProductsInclude
 }
 
 export default function CoffeeProductItem({ product }: CoffeeProductItemProps) {
@@ -40,7 +40,17 @@ export default function CoffeeProductItem({ product }: CoffeeProductItemProps) {
         <CardTitle>{product.name}</CardTitle>
       </CardHeader>
       <CardContent className="h-full">
-        <CardDescription>{product.notes}</CardDescription>
+        <CardDescription>
+          {product?.coffeeProfile?.type}
+          {product?.coffeeProfile?.origin}
+          {product?.coffeeProfile?.flavour}
+          {product?.coffeeProfile?.strength}
+          {/* <>
+            <p className="text-sm">{product.coffeeProfile.type}</p>
+            <p className="text-sm">{product.coffeeProfile.origin}</p>
+            <p className="text-sm">{product.coffeeProfile.flavour}</p>
+          </> */}
+        </CardDescription>
       </CardContent>
       <CardFooter>
         <p className="text-sm"> Rating: 4.9 - 58 reviews</p>

@@ -1,24 +1,20 @@
-import { createContext, useState } from 'react'
-import { CoffeeProduct } from '@/lib/types'
+import { createContext, useEffect, useState } from 'react'
+import { CoffeeProductsInclude } from '@/lib/types'
 
 const initialCart = {
   products: [],
   total: 0,
 }
 
-// const ex = {
-//     products: [{ id: 1, quantity: 1, size: 'regular', bean: 'wholebean' }],
-//     total: 0,
-//   }
-
 export type CartProduct = {
-  id: string | undefined
-  quantity: number | undefined
-  price: number | undefined
-  size: string | undefined
-  bean: string | undefined
-  name: string | undefined
-  image: string | undefined
+  id: string
+  quantity: number
+  price: number
+  size: string
+  bean: string
+  name: string
+  image: string
+  notes: string
 }
 
 type TCart = {
@@ -28,9 +24,10 @@ type TCart = {
 
 type CartContextType = {
   cart: TCart
-  pendingProduct: CoffeeProduct | null
+  pendingProduct: CoffeeProductsInclude | null
   handleAddToCart: (product: CartProduct) => void
-  handlePendingProduct: (product: CoffeeProduct) => void
+  handlePendingProduct: (product: CoffeeProductsInclude) => void
+  handleRemoveFromCart: (product: CartProduct) => void
 }
 
 type CartContextProviderProps = {
@@ -40,17 +37,82 @@ type CartContextProviderProps = {
 export const CartContext = createContext<CartContextType | null>(null)
 
 export const CartContextProvider = ({ children }: CartContextProviderProps) => {
-  const [pendingProduct, setPendingProduct] = useState<CoffeeProduct | null>(
-    null
+  const [pendingProduct, setPendingProduct] =
+    useState<CoffeeProductsInclude | null>(null)
+  const [cart, setCart] = useState<TCart>(
+    () => JSON.parse(sessionStorage.getItem('weHaveCoffeeCart')!) || initialCart
   )
-  const [cart, setCart] = useState<TCart>(initialCart)
-  const handlePendingProduct = (product: CoffeeProduct) => {
+
+  useEffect(() => {
+    sessionStorage.setItem('weHaveCoffeeCart', JSON.stringify(cart))
+  }, [cart])
+
+  const handlePendingProduct = (product: CoffeeProductsInclude) => {
     setPendingProduct(product)
   }
 
   const handleAddToCart = (product: CartProduct) => {
-    setCart({ ...cart, products: [...cart.products, product] })
+    const existingProduct = cart.products.find(
+      (item) => item.id === product.id && item.size === product.size
+    )
+    if (existingProduct) {
+      const updatedProducts = cart.products.map((item) => {
+        if (item.id === product.id && item.size === product.size) {
+          return { ...item, quantity: item?.quantity + 1 }
+        }
+        return item
+      })
+
+      setCart({
+        ...cart,
+        products: updatedProducts,
+        total: cart.total + product.price!,
+      })
+      setPendingProduct(null)
+      return
+    }
+    setCart({
+      ...cart,
+      products: [...cart.products, product],
+      total: cart.total + product.price!,
+    })
     setPendingProduct(null)
+  }
+
+  const handleRemoveFromCart = (product: CartProduct) => {
+    const productToRemove = cart.products.find(
+      (item) => item.id === product.id && item.size === product.size
+    )
+    if (!productToRemove) return
+
+    if (productToRemove.quantity > 1) {
+      const updatedProducts = cart.products.map((item) => {
+        if (item.id === product.id && item.size === product.size) {
+          return { ...item, quantity: item.quantity - 1 }
+        }
+        return item
+      })
+
+      setCart({
+        ...cart,
+        products: updatedProducts,
+        total: cart.total - productToRemove.price!,
+      })
+      return
+    }
+
+    const updatedProducts = cart.products.filter(
+      (item) =>
+        (item.id !== productToRemove.id &&
+          item.size === productToRemove.size) ||
+        item.size !== productToRemove.size
+    )
+
+    setCart({
+      ...cart,
+      products: updatedProducts,
+      total: cart.total - productToRemove.price!,
+    })
   }
 
   return (
@@ -60,6 +122,7 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
         pendingProduct,
         handleAddToCart,
         handlePendingProduct,
+        handleRemoveFromCart,
       }}
     >
       {children}

@@ -10,7 +10,7 @@ const footerSocials = ['Instagram', 'Facebook', 'Twitter']
 
 export default function Footer() {
   return (
-    <footer className=" bg-[#8e936d] mt-auto flex flex-1 items-center justify-around p-4 gap-4 flex-wrap-reverse">
+    <footer className=" bg-zinc-300 mt-auto flex flex-1 items-center justify-around p-4 gap-4 flex-wrap-reverse">
       <FooterSection title="Shop" links={footerShop} />
       <FooterSection title="Locations" links={footerLocations} />
       <FooterSection title="Socials" links={footerSocials} />

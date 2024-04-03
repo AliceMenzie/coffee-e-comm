@@ -1,4 +1,4 @@
-import { exampleCoffeedata as products } from '../src/lib/data'
+import { exampleCoffeedata as products } from '../src/lib/constants'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -7,9 +7,8 @@ async function main() {
   console.log(`Start seeding ...`)
   // await prisma.coffeeProduct.deleteMany({});
 
-
   for (const product of products) {
-    const result = await prisma.coffeeProduct.upsert({
+    const result = await prisma.coffeeProducts.upsert({
       where: { id: product.id.toString() },
       update: {},
       create: {
@@ -18,8 +17,16 @@ async function main() {
         image: product.image,
         price: {
           create: {
-            regular: 2,
-            large: 5,
+            regular: Math.floor(Math.random() * 8) + 2,
+            large: Math.floor(Math.random() * 15) + 15,
+          },
+        },
+        coffeeProfile: {
+          create: {
+            type: product.coffeeProfile.create.type,
+            strength: product.coffeeProfile.create.strength,
+            origin: product.coffeeProfile.create.origin,
+            flavour: product.coffeeProfile.create.flavour,
           },
         },
         reviews: {
@@ -32,28 +39,6 @@ async function main() {
     })
     console.log(`Created event with id: ${result.id}`)
   }
-
-  // const result = await prisma.coffeeProduct.upsert({
-  //   where: { id: '1' },
-  //   update: {},
-  //   create: {
-  //     name: 'name of product',
-  //     notes: 'spicy yet sweet, with a hint of chocolate',
-  //     image: '###',
-  //     price: {
-  //       create: {
-  //         regular: 2,
-  //         large: 5,
-  //       },
-  //     },
-  //     reviews: {
-  //       create: [
-  //         { rating: 5, comment: 'This is the best coffee I have ever had!' },
-  //         { rating: 4, comment: 'nice' },
-  //       ],
-  //     },
-  //   },
-  // })
 
   console.log(`Seeding finished.`)
 }

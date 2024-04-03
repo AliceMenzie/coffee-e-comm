@@ -54,9 +54,14 @@ export default function CartSheet() {
             {cart.products.length > 0 ? (
               <li className="flex flex-col gap-4">
                 {cart.products.map((product) => (
-                  <CartProductItem key={product.id} product={product} />
+                  <CartProductItem
+                    key={product.id + product.size}
+                    product={product}
+                  />
                 ))}
-                <p>Total: {cart.total}</p>
+                <p>
+                  <span className="font-semibold">Total:</span> ${cart.total}
+                </p>
               </li>
             ) : (
               <>

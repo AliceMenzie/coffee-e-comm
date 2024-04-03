@@ -1,7 +1,7 @@
 import EventCarousel from '@/components/event-carousel'
 import { Button } from '@/components/ui/button'
 import H1 from '@/components/ui/H1'
-import { imageCollection } from '@/lib/data'
+import { imageCollection } from '@/lib/constants'
 import Image from 'next/image'
 import Link from 'next/link'
 

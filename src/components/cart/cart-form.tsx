@@ -16,6 +16,7 @@ import { Input } from '../ui/input'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Label } from '../ui/label'
 import useCartContext from '@/lib/hooks/useCartContext'
+import { CartProduct } from '@/lib/contexts/CartContextProvider'
 
 const formSchema = z.object({
   quantity: z.coerce.number().int().positive(),
@@ -29,18 +30,21 @@ export default function CartForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      quantity: 0,
+      quantity: 1,
       size: 'regular',
       bean: 'wholebean',
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const productToAdd = {
+    if (!pendingProduct) return
+    const size = values.size as keyof typeof pendingProduct.price
+    const productToAdd: any = {
       id: pendingProduct?.id,
       name: pendingProduct?.name,
-      price: pendingProduct?.price.regular,
+      price: pendingProduct?.price && pendingProduct?.price[size],
       image: pendingProduct?.image,
+      notes: pendingProduct?.notes,
       ...values,
     }
     handleAddToCart(productToAdd)
@@ -55,7 +59,7 @@ export default function CartForm() {
             <FormItem>
               <FormLabel>Quantity</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input type="number" {...field} min={1} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,11 +79,15 @@ export default function CartForm() {
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="regular" id="r1" />
-                      <Label htmlFor="r1">Regular</Label>
+                      <Label htmlFor="r1">
+                        Regular: ${pendingProduct?.price?.regular}
+                      </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="large" id="r2" />
-                      <Label htmlFor="r2">Large</Label>
+                      <Label htmlFor="r2">
+                        Large: ${pendingProduct?.price?.large}
+                      </Label>
                     </div>
                   </RadioGroup>
                 </FormControl>
@@ -94,7 +102,7 @@ export default function CartForm() {
               <FormItem>
                 <FormLabel>Bean</FormLabel>
                 <FormControl>
-                  <RadioGroup //defaultValue="wholebean"
+                  <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
