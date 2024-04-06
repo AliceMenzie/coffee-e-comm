@@ -10,42 +10,57 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model CoffeeProducts {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  image     String
-  notes     String
+model Users {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  email     String    @unique
+  username  String    @unique
+  hashedPassword  String
   reviews   Reviews[]
-  price     Prices?
+  // role      String   @default("USER")
+  // cart      Cart?
+}
+
+model CoffeeProducts {
+  // id            Number          @id @default(autoincrement())
+  id            String          @id @default(cuid())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  name          String
+  image         String
+  notes         String
+  reviews       Reviews[]
+  price         Prices?
   coffeeProfile CoffeeProfiles?
 }
 
 model Prices {
-  id              Int            @id @default(autoincrement())
+  id              Int             @id @default(autoincrement())
   regular         Int
   large           Int
-  coffeeProductId String         @unique
+  coffeeProductId String          @unique
   coffeeProduct   CoffeeProducts? @relation(fields: [coffeeProductId], references: [id])
 }
 
 model Reviews {
-  id              Int           @id @default(autoincrement())
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   rating          Int
   comment         String
   coffeeProductId String
   coffeeProduct   CoffeeProducts @relation(fields: [coffeeProductId], references: [id])
+  User            Users?          @relation(fields: [userId], references: [id])
+  userId          String?
 }
 
 model CoffeeProfiles {
-  id              Int            @id @default(autoincrement())
+  id              Int             @id @default(autoincrement())
   type            String
   strength        String
   origin          String
   flavour         String
-  coffeeProductId String         @unique
+  coffeeProductId String          @unique
   coffeeProduct   CoffeeProducts? @relation(fields: [coffeeProductId], references: [id])
 }

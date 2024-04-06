@@ -1,14 +1,14 @@
 import { exampleCoffeedata as products } from '../src/lib/constants'
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 async function main() {
   console.log(`Start seeding ...`)
   // await prisma.coffeeProduct.deleteMany({});
-
+  let coffeeIds = []
   for (const product of products) {
-    const result = await prisma.coffeeProducts.upsert({
+    const coffeeProduct = await prisma.coffeeProducts.upsert({
       where: { id: product.id.toString() },
       update: {},
       create: {
@@ -29,16 +29,42 @@ async function main() {
             flavour: product.coffeeProfile.create.flavour,
           },
         },
-        reviews: {
-          create: [
-            { rating: 5, comment: 'This is the best coffee I have ever had!' },
-            { rating: 4, comment: 'nice' },
-          ],
-        },
+        // reviews: {
+        //   create: [
+        //     { rating: 5, comment: 'This is the best coffee I have ever had!' },
+        //     { rating: 4, comment: 'nice' },
+        //   ],
+        // },
       },
     })
-    console.log(`Created event with id: ${result.id}`)
+    coffeeIds.push(coffeeProduct.id)
+    console.log(`Created event with id: ${coffeeProduct.id}`)
   }
+
+  const userData: Prisma.UsersCreateInput = {
+    email: 'example@gmail.com',
+    username: 'example',
+    hashedPassword: '',
+    reviews: {
+      create: [
+        {
+          rating: 5,
+          comment: 'This is the best coffee I have ever had!',
+          coffeeProductId: coffeeIds[0],
+        },
+        {
+          rating: 4,
+          comment: 'nice',
+          coffeeProductId: coffeeIds[0],
+        },
+      ],
+    },
+  }
+
+  const result = await prisma.users.create({
+    data: userData,
+  })
+  console.log(`Created user with id: ${result.id}`)
 
   console.log(`Seeding finished.`)
 }
