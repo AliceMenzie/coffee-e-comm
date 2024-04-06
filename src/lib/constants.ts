@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+
 import { FilterOptions } from './types'
 
 export const exampleCoffeedata = [
@@ -256,23 +256,6 @@ export const imageCollection = [
   'https://unsplash.com/photos/coffee-bean-lot-TD4DBagg2wE',
   'https://unsplash.com/photos/person-making-latte-art-nzyzAUsbV0M',
 ]
-
-const prismaClientSingleton = () => {
-  return new PrismaClient()
-}
-
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientSingleton | undefined
-}
-
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
-
-export default prisma
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
-
 
 // Filter -------------------------------------------------
 export const fiilterBy = [

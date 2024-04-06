@@ -39,8 +39,20 @@ export const CartContext = createContext<CartContextType | null>(null)
 export const CartContextProvider = ({ children }: CartContextProviderProps) => {
   const [pendingProduct, setPendingProduct] =
     useState<CoffeeProductsInclude | null>(null)
+
+
+
+  // const [archivedLists, setArchivedLists] = useState<TArchivedShoppingList[]>(
+  //   () =>
+  //     JSON.parse(localStorage.getItem('archivedLists')!) || exampleArchivedList
+  // )
+
+  // useEffect(() => {
+  //   localStorage.setItem('listItems', JSON.stringify(shoppingList))
+  // }, [shoppingList])
+
   const [cart, setCart] = useState<TCart>(
-    () => JSON.parse(sessionStorage.getItem('weHaveCoffeeCart')!) || initialCart
+    () => typeof window !== 'undefined' && JSON.parse(sessionStorage.getItem('weHaveCoffeeCart')!) || initialCart
   )
 
   useEffect(() => {

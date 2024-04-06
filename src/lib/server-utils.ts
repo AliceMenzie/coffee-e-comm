@@ -2,12 +2,13 @@
 
 // import { unstable_cache } from 'next/cache'
 // import { notFound } from 'next/navigation'
-import prisma from './constants'
+import prisma from '@/lib/prisma'
 
 export const getCoffeeProducts = async () => {
   const coffeeProducts = await prisma.coffeeProducts.findMany({
     include: {
       price: true,
+      reviews: true,
       coffeeProfile: true,
     },
   })
@@ -22,6 +23,7 @@ export const getCoffeeProductById = async (id: string) => {
     include: {
       price: true,
       reviews: true,
+      coffeeProfile: true,
     },
   })
 

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Card, CardContent, CardDescription, CardTitle } from '../ui/card'
 import { CartProduct } from '@/lib/contexts/CartContextProvider'
 import { Button } from '../ui/button'
-import { icons, Minus, Plus } from 'lucide-react'
+import { Minus, Plus } from 'lucide-react'
 import useCartContext from '@/lib/hooks/useCartContext'
 
 type CartProductItemProps = {

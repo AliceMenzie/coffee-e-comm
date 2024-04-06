@@ -16,7 +16,6 @@ import { Input } from '../ui/input'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Label } from '../ui/label'
 import useCartContext from '@/lib/hooks/useCartContext'
-import { CartProduct } from '@/lib/contexts/CartContextProvider'
 
 const formSchema = z.object({
   quantity: z.coerce.number().int().positive(),
@@ -37,6 +36,7 @@ export default function CartForm() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log('values', values)
     if (!pendingProduct) return
     const size = values.size as keyof typeof pendingProduct.price
     const productToAdd: any = {
@@ -49,6 +49,7 @@ export default function CartForm() {
     }
     handleAddToCart(productToAdd)
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

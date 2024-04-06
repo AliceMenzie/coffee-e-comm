@@ -2,12 +2,12 @@ import React, { Suspense } from 'react'
 import Filter from '@/components/filter'
 import H1 from '@/components/ui/H1'
 import { getCoffeeProducts } from '@/lib/server-utils'
-import CoffeeWrapper from '@/components/coffee-wrapper'
+import CoffeeWrapper from '@/components/products/coffee-wrapper'
 
 export default async function Page() {
   const coffeeProducts = await getCoffeeProducts()
   return (
-    <div className="flex flex-1 h-full flex-col">
+    <main className="flex flex-1 h-full flex-col">
       <div className="flex flex-col gap-2 p-10 text-center">
         <H1> Coffee </H1>
         <p className="italic">
@@ -20,6 +20,6 @@ export default async function Page() {
           <CoffeeWrapper coffeeProducts={coffeeProducts} />
         </Suspense>
       </div>
-    </div>
+    </main>
   )
 }

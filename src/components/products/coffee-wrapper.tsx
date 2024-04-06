@@ -1,13 +1,14 @@
 'use client'
 import React from 'react'
 import CoffeeProductItem from './coffee-product-item'
-import { Sheet } from './ui/sheet'
-import CartSheet from './cart/cart-sheet'
+import { Sheet } from '../ui/sheet'
+import CartSheet from '../cart/cart-sheet'
 import useFilterContext from '@/lib/hooks/useFilterContext'
 import ProductItem from './product-item'
 import ProductList from './product-list'
 import { anyTrue } from '@/lib/utils'
 import { CoffeeProductsInclude } from '@/lib/types'
+import Link from 'next/link'
 
 type CoffeeWrapperProps = {
   coffeeProducts: CoffeeProductsInclude[]
@@ -39,9 +40,11 @@ export default function CoffeeWrapper({ coffeeProducts }: CoffeeWrapperProps) {
       <Sheet>
         <ProductList>
           {filteredProducts.map((product: any) => (
-            <ProductItem className="relative w-60 h-[26rem]" key={product.id}>
-              <CoffeeProductItem product={product} />
-            </ProductItem>
+            <Link key={product.id} href={`/shop/coffee/product/${product.id}`}>
+              <ProductItem key={product.id} className="relative w-60 h-[26rem]">
+                <CoffeeProductItem product={product} />
+              </ProductItem>
+            </Link>
           ))}
         </ProductList>
         <div>
