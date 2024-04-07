@@ -1,3 +1,4 @@
+// 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 import { User } from 'lucide-react'
@@ -24,7 +25,7 @@ const routes = [
 ]
 
 export default function Header() {
-  const activePathname = usePathname()
+  // const activePathname = usePathname()
 
   return (
     <header className="flex flex-col bg-zinc-300">
@@ -58,10 +59,10 @@ export default function Header() {
               <Link
                 href={route.path}
                 className={cn(
-                  'rounded-sm px-2 py-1 hover:text-zinc-50 transition',
-                  {
-                    'bg-zinc-400 text-white': route.path === activePathname,
-                  }
+                  'rounded-sm px-2 py-1 hover:text-zinc-50 transition'
+                  // {
+                  //   'bg-zinc-400 text-white': route.path === activePathname,
+                  // }
                 )}
               >
                 {route.label}

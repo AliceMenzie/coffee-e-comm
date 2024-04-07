@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 import ProductItemCart from '@/components/products/product-item-cart'
-import { getCoffeeProductById } from '@/lib/server-utils'
+import { getCoffeeProductById } from '@/lib/actions/server-utils'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Star } from 'lucide-react'

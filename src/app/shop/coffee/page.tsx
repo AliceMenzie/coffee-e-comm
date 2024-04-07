@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import Filter from '@/components/filter'
 import H1 from '@/components/ui/H1'
-import { getCoffeeProducts } from '@/lib/server-utils'
+import { getCoffeeProducts } from '@/lib/actions/server-utils'
 import CoffeeWrapper from '@/components/products/coffee-wrapper'
 
 export default async function Page() {

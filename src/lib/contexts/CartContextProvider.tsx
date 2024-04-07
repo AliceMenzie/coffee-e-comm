@@ -1,3 +1,4 @@
+'use client'
 import { createContext, useEffect, useState } from 'react'
 import { CoffeeProductsInclude } from '@/lib/types'
 
@@ -40,8 +41,6 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
   const [pendingProduct, setPendingProduct] =
     useState<CoffeeProductsInclude | null>(null)
 
-
-
   // const [archivedLists, setArchivedLists] = useState<TArchivedShoppingList[]>(
   //   () =>
   //     JSON.parse(localStorage.getItem('archivedLists')!) || exampleArchivedList
@@ -52,7 +51,10 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
   // }, [shoppingList])
 
   const [cart, setCart] = useState<TCart>(
-    () => typeof window !== 'undefined' && JSON.parse(sessionStorage.getItem('weHaveCoffeeCart')!) || initialCart
+    () =>
+      (typeof window !== 'undefined' &&
+        JSON.parse(sessionStorage.getItem('weHaveCoffeeCart')!)) ||
+      initialCart
   )
 
   useEffect(() => {

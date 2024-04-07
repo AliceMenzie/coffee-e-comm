@@ -3,6 +3,21 @@
 // import { unstable_cache } from 'next/cache'
 // import { notFound } from 'next/navigation'
 import prisma from '@/lib/prisma'
+import { auth } from '../auth'
+import { redirect } from 'next/navigation'
+
+export async function checkAuth() {
+  const session = await auth()
+  if (session?.user) {
+    redirect('/') // Redirect to home page if user is already logged in
+  }
+
+  if (!session?.user) {
+    redirect('/login')
+  }
+
+  return session
+}
 
 export const getCoffeeProducts = async () => {
   const coffeeProducts = await prisma.coffeeProducts.findMany({

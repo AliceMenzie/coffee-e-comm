@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server'
+import { auth } from './lib/auth'
+// export { auth as middleware } from './lib/auth'
 
-export function middleware(request: Request) {
-  console.log('middleware', request.url)
-  return NextResponse.next()
-}
+// export function middleware(request: Request) {
+//   console.log('middleware', request.url)
+//   return NextResponse.next()
+// }
+
+
+export default auth((req) => {
+  req.auth
+})
 
 export const config = {
   matcher: [

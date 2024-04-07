@@ -1,5 +1,6 @@
 import { exampleCoffeedata as products } from '../src/lib/constants'
 import { Prisma, PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -60,6 +61,10 @@ async function main() {
       ],
     },
   }
+
+
+  const hashedPassword = await bcrypt.hash("example", 10);
+  userData.hashedPassword = hashedPassword;
 
   const result = await prisma.users.create({
     data: userData,
