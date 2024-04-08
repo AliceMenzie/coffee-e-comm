@@ -30,12 +30,6 @@ async function main() {
             flavour: product.coffeeProfile.create.flavour,
           },
         },
-        // reviews: {
-        //   create: [
-        //     { rating: 5, comment: 'This is the best coffee I have ever had!' },
-        //     { rating: 4, comment: 'nice' },
-        //   ],
-        // },
       },
     })
     coffeeIds.push(coffeeProduct.id)
@@ -43,9 +37,29 @@ async function main() {
   }
 
   const userData: Prisma.UsersCreateInput = {
-    email: 'example@gmail.com',
-    username: 'example',
+    email: 'example2@gmail.com',
+    username: 'example2',
     hashedPassword: '',
+    orderHistory: {
+      create: [
+        {
+          OrderItems: {
+            create: [
+              {
+                coffeeProductId: coffeeIds[0],
+                quantity: 1,
+                isGround: true,
+              },
+              {
+                coffeeProductId: coffeeIds[1],
+                quantity: 1,
+                isGround: false,
+              },
+            ],
+          },
+        },
+      ],
+    },
     reviews: {
       create: [
         {
@@ -62,9 +76,8 @@ async function main() {
     },
   }
 
-
-  const hashedPassword = await bcrypt.hash("example", 10);
-  userData.hashedPassword = hashedPassword;
+  const hashedPassword = await bcrypt.hash('example', 10)
+  userData.hashedPassword = hashedPassword
 
   const result = await prisma.users.create({
     data: userData,

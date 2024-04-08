@@ -1,23 +1,8 @@
 'use server'
 
+import prisma from '@/lib/prisma'
 // import { unstable_cache } from 'next/cache'
 // import { notFound } from 'next/navigation'
-import prisma from '@/lib/prisma'
-import { auth } from '../auth'
-import { redirect } from 'next/navigation'
-
-export async function checkAuth() {
-  const session = await auth()
-  if (session?.user) {
-    redirect('/') // Redirect to home page if user is already logged in
-  }
-
-  if (!session?.user) {
-    redirect('/login')
-  }
-
-  return session
-}
 
 export const getCoffeeProducts = async () => {
   const coffeeProducts = await prisma.coffeeProducts.findMany({
@@ -43,4 +28,34 @@ export const getCoffeeProductById = async (id: string) => {
   })
 
   return coffeeProduct
+}
+
+export const getUserReviews = async (userId: string) => {
+  const reviews = await prisma.reviews.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      coffeeProduct: true,
+    },
+  })
+
+  return reviews
+}
+
+export const getOrderHistory = async (userId: string) => {
+  const orderHistory = await prisma.orderHistory.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      OrderItems: {
+        include: {
+          coffeeProduct: true,
+        },
+      },
+    },
+  })
+
+  return orderHistory
 }

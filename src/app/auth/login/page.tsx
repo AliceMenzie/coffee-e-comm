@@ -2,10 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import AuthForm from '@/components/auth/auth-form'
-import { checkAuth } from '@/lib/actions/server-utils'
 
-export default async function Page() {
-  await checkAuth()
+export default  function Page() {
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
       <div className="flex items-center justify-center py-12">

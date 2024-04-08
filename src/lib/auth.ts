@@ -21,7 +21,6 @@ const config = {
         // validations
         const validatedCredentials = AuthSchema.safeParse(credentials)
         if (!validatedCredentials.success) {
-          console.log('validatedFormData.error', validatedCredentials.error)
           return null
         }
 
@@ -40,61 +39,58 @@ const config = {
         // const isMatch = password === user.hashedPassword
 
         if (!isMatch) {
-          console.log('isMatch', isMatch)
           return null
         }
 
-        // if (isMatch) {
-        //   console.log('isMatch', isMatch)
-        //   console.log('user', user)
         return user
-        // }
       },
     }),
   ],
   callbacks: {
     authorized: async ({ request, auth }) => {
       const isLoggedIn = Boolean(auth?.user)
-      const isAccessingUser = request.nextUrl.pathname.includes('/user')
-      // console.log('isLoggedIn', isLoggedIn)
-      // console.log('isAccessingUser', isAccessingUser)
+      const isAccessingAccount = request.nextUrl.pathname.includes('/account')
 
-      if (!isLoggedIn && isAccessingUser) {
+      if (!isLoggedIn && isAccessingAccount) {
         return NextResponse.redirect(
           new URL('/auth/login', request.nextUrl).toString()
         )
       }
-      if (!isLoggedIn && !isAccessingUser) {
+      if (!isLoggedIn && !isAccessingAccount) {
         return true
       }
 
-      if (isLoggedIn && isAccessingUser) {
+      if (isLoggedIn && isAccessingAccount) {
         return true
         // Response.redirect(new URL('/user/settings', request.nextUrl).toString())
       }
 
-      if (isLoggedIn && !isAccessingUser) {
+      if (isLoggedIn && !isAccessingAccount) {
+        if (
+          request.nextUrl.pathname === '/auth/login' ||
+          request.nextUrl.pathname === '/auth/signup'
+        ) {
+          return NextResponse.redirect(new URL('/', request.nextUrl).toString())
+        }
         return true
-        // return NextResponse.redirect(new URL('/', request.nextUrl).toString())
       }
 
       return false
     },
-    // jwt: async ({ token, user }) => {
-    //   // console.log('jwt', token, user)
-    //   if (user) {
-    //     // on sign in
-    //     token.userId = user.id
-    //   }
+    jwt: async ({ token, user }) => {
+      if (user) {
+        // on sign in
+        token.userId = user.id
+      }
 
-    //   return token
-    // },
-    // session: ({ session, token }) => {
-    //   session.user.id = token.userId
-    //   // session.user.hasAccess = token.hasAccess;
+      return token
+    },
+    session: ({ session, token }) => {
+      session.user.id = token.userId
+      // session.user.hasAccess = token.hasAccess;
 
-    //   return session
-    // },
+      return session
+    },
   },
 } satisfies NextAuthConfig
 

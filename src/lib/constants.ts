@@ -1,4 +1,3 @@
-
 import { FilterOptions } from './types'
 
 export const exampleCoffeedata = [
@@ -271,3 +270,14 @@ export const filterOptions: FilterOptions = {
   flavour: { fruity: false, nutty: false, chocolate: false },
   origin: { africa: false, south_america: false, asia: false },
 }
+
+// REVIEWS
+
+export const PRODUCT_REVIEW_POINTS = [
+  'Rating',
+  'Comment',
+  'Coffee ID/Name',
+  'Notes',
+  'Price',
+  'Order Id',
+]

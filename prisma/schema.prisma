@@ -5,25 +5,25 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Users {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  email     String    @unique
-  username  String    @unique
-  hashedPassword  String
-  reviews   Reviews[]
-  // role      String   @default("USER")
-  // cart      Cart?
+  id             String         @id @default(cuid())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  email          String         @unique
+  username       String         @unique
+  hashedPassword String
+  reviews        Reviews[]
+  orderHistory   OrderHistory[]
 }
 
 model CoffeeProducts {
-  // id            Number          @id @default(autoincrement())
   id            String          @id @default(cuid())
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
@@ -33,6 +33,7 @@ model CoffeeProducts {
   reviews       Reviews[]
   price         Prices?
   coffeeProfile CoffeeProfiles?
+  OrderItems    OrderItems[]
 }
 
 model Prices {
@@ -51,7 +52,7 @@ model Reviews {
   comment         String
   coffeeProductId String
   coffeeProduct   CoffeeProducts @relation(fields: [coffeeProductId], references: [id])
-  User            Users?          @relation(fields: [userId], references: [id])
+  User            Users?         @relation(fields: [userId], references: [id])
   userId          String?
 }
 
@@ -63,4 +64,29 @@ model CoffeeProfiles {
   flavour         String
   coffeeProductId String          @unique
   coffeeProduct   CoffeeProducts? @relation(fields: [coffeeProductId], references: [id])
+}
+
+model OrderHistory {
+  id         String       @id @default(cuid())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  userId     String
+  User       Users        @relation(fields: [userId], references: [id])
+  OrderItems OrderItems[]
+  // isFullfilled Boolean
+  // isShipped    Boolean
+  // total        Int
+}
+
+model OrderItems {
+  id         String       @id @default(cuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  quantity        Int
+  isGround        Boolean
+  // size            String
+  coffeeProductId String
+  coffeeProduct   CoffeeProducts @relation(fields: [coffeeProductId], references: [id])
+  orderHistoryId  String
+  orderHistory    OrderHistory   @relation(fields: [orderHistoryId], references: [id])
 }
