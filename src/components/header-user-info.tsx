@@ -11,6 +11,8 @@ import {
   navigationMenuTriggerStyle,
 } from './ui/navigation-menu'
 import Link from 'next/link'
+import { Button } from './ui/button'
+import { logOut } from '@/lib/actions/auth'
 
 export default function HeaderUserInfo() {
   return (
@@ -37,7 +39,14 @@ export default function HeaderUserInfo() {
               className={navigationMenuTriggerStyle()}
               asChild
             >
-              <Link href="/account/settings">Sign out</Link>
+              <Button
+                variant={'link'}
+                onClick={async () => {
+                  await logOut()
+                }}
+              >
+                Signout
+              </Button>
             </NavigationMenuLink>
           </NavigationMenuContent>
         </NavigationMenuItem>

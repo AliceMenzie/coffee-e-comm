@@ -1,7 +1,7 @@
 'use server'
 
 import { AuthError } from 'next-auth'
-import { signIn } from '../auth'
+import { signIn, signOut } from '../auth'
 
 export async function login(formData: unknown) {
   if (!(formData instanceof FormData)) {
@@ -30,4 +30,8 @@ export async function login(formData: unknown) {
 
     throw error // nextjs redirects throws error, so we need to rethrow it
   }
+}
+
+export async function logOut() {
+  await signOut({ redirectTo: '/' })
 }

@@ -4,8 +4,8 @@ import { auth } from '@/lib/auth'
 
 export default async function Page() {
   const session = await auth()
-  const orderHistory = await getOrderHistory(session?.user?.id)
-  console.log(orderHistory)
+  const orderHistory = await getOrderHistory(session?.user?.id!)
+
   return (
     <div className="p-4 flex flex-col flex-1">
       <h2 className="text-xl pb-12">My Orders</h2>

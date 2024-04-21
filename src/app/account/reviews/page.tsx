@@ -5,7 +5,7 @@ import React from 'react'
 
 export default async function Page() {
   const session = await auth()
-  const reviews = await getUserReviews(session?.user.id)
+  const reviews = await getUserReviews(session?.user.id!)
 
   return (
     <div className="p-4 flex flex-col flex-1">

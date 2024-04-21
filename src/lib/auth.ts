@@ -2,7 +2,6 @@ import NextAuth, { NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import prisma from './prisma'
 import bcrypt from 'bcryptjs'
-// import { withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
 import { AuthSchema, TAuthSchema } from './validations'
 
@@ -79,15 +78,13 @@ const config = {
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        // on sign in
-        token.userId = user.id
+        token.userId = user.id!
       }
 
       return token
     },
     session: ({ session, token }) => {
       session.user.id = token.userId
-      // session.user.hasAccess = token.hasAccess;
 
       return session
     },
